@@ -1,0 +1,12 @@
+HEADERS += /opt/linux-data/ezx/qtopia-apps/mqmpc/collection.h
+HEADERS += /opt/linux-data/ezx/qtopia-apps/mqmpc/libmpdclient.h
+HEADERS += /opt/linux-data/ezx/qtopia-apps/mqmpc/mainwidget.h
+HEADERS += /opt/linux-data/ezx/qtopia-apps/mqmpc/ui_general.h
+HEADERS += /opt/linux-data/ezx/qtopia-apps/mqmpc/qslidelabel.h
+SOURCES += /opt/linux-data/ezx/qtopia-apps/mqmpc/collection.cpp
+SOURCES += /opt/linux-data/ezx/qtopia-apps/mqmpc/libmpdclient.c
+SOURCES += /opt/linux-data/ezx/qtopia-apps/mqmpc/main.cpp
+SOURCES += /opt/linux-data/ezx/qtopia-apps/mqmpc/mainwidget.cpp
+SOURCES += /opt/linux-data/ezx/qtopia-apps/mqmpc/ui_general.cpp
+SOURCES += /opt/linux-data/ezx/qtopia-apps/mqmpc/qslidelabel.cpp
+TRANSLATIONS += /opt/linux-data/ezx/qtopia-apps/mqmpc/mqmpc-ru_RU.ts

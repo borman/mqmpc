@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment[]=Mobile Qt Media Player Control
+Exec=mqmpc
+Icon=mqmpc/mqmpc
+Type=Application
+Name[]=mqmpc
+
