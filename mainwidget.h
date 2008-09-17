@@ -1,20 +1,36 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#ifdef EZX
+
+#include <ZMainWidget.h>
+#include <ZMessageBox.h>
+#include <UTIL_CST.h>
+#include <qstringlist.h>
+
+#else
+
 #include <QStackedWidget>
 #include <QTimer>
 #include <QStringList>
+#define ZMainWidget QStackedWidget
+
+#endif
 
 #include "libmpdclient.h"
 
 #include "ui_general.h"
 #include "collection.h"
 
-class MainWidget : public QStackedWidget
+class MainWidget : public ZMainWidget
 {
   Q_OBJECT
 public:
+#ifdef EZX
+  MainWidget();
+#else
   MainWidget(QWidget *parent= 0, Qt::WindowFlags flags= 0);
+#endif
   virtual ~MainWidget();
   void setHostPort(QString host = "127.0.0.1", int port = 6600);
 public slots:
@@ -41,6 +57,8 @@ public slots:
   void showCollectionDialog();
 
   void collectionItemSelected(const QString &str, int role);
+protected:
+  bool eventFilter(QObject *o, QEvent *e);
 private:
   bool checkConnection();
   void setConnected(bool state);
@@ -70,7 +88,11 @@ private:
   QString collectionAlbum;
   QString collectionArtist;
 
+#ifdef EZX
+  QPopupMenu *mainMenu;
+#else
   QMenu *mainMenu;
+#endif
 };
 
 #endif

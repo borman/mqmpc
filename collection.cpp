@@ -10,7 +10,6 @@ CollectionDialog::CollectionDialog(QWidget *parent)
   : QDialog(parent)
 {
   setModal(true);
-  setWindowTitle(tr("MPD collection"));
   QVBoxLayout *layout = new QVBoxLayout(this);
   listWidget = new QListWidget(this);
   QtopiaApplication::setStylusOperation(listWidget, QtopiaApplication::RightOnHold);

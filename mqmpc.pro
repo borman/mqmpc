@@ -11,7 +11,7 @@ TRANSLATIONS += mqmpc-ru_RU.ts
 target.hint=sxe
 target.domain=trusted
 
-desktop.files=mqmpc.desktop
+desktop.files=mqmpc-qtopia.desktop
 desktop.path=/apps/Applications
 desktop.hint=desktop
 INSTALLS+=desktop
