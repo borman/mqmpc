@@ -20,11 +20,10 @@ GeneralUI::GeneralUI(QWidget *parent)
   setFrameStyle(QFrame::NoFrame);
   QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
-  mainLayout->addSpacing(5);
+  //mainLayout->addSpacing(5);
 
-  nowPlaying = new QLabel(this);
-  nowPlaying->setAlignment(Qt::AlignVCenter);
-  nowPlaying->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
+  nowPlaying = new QMediaLabel(this);
+  nowPlaying->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed));
   mainLayout->addWidget(nowPlaying);
 
   progressBar = new QProgressBar(this);
@@ -33,7 +32,7 @@ GeneralUI::GeneralUI(QWidget *parent)
 
   mainLayout->addWidget(progressBar);
 
-  mainLayout->addSpacing(5);
+  mainLayout->addStretch();
 
   QFrame *buttonBarWidget = new QFrame(this);
   QHBoxLayout *buttonBarLayout = new QHBoxLayout(buttonBarWidget);
@@ -61,12 +60,14 @@ GeneralUI::GeneralUI(QWidget *parent)
   buttonBarLayout->addWidget(nextButton);
   mainLayout->addWidget(buttonBarWidget);
 
-  mainLayout->addSpacing(5);
+  mainLayout->addStretch();
 
   playlist = new QListWidget(this);
   playlist->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
-  playlist->setFrameStyle(QFrame::Plain | QFrame::StyledPanel);
-  playlist->setIconSize(QSize(22, 22));
+  //playlist->setFrameStyle(QFrame::Plain | QFrame::StyledPanel);
+  playlist->setFrameStyle(QFrame::NoFrame);
+  int playlist_iconSize = playlist->fontMetrics().height();
+  playlist->setIconSize(QSize(playlist_iconSize, playlist_iconSize));
   playlist->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   playlist->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
   playlist->setItemDelegate(new QtopiaItemDelegate);
@@ -75,3 +76,12 @@ GeneralUI::GeneralUI(QWidget *parent)
 }
 
 GeneralUI::~GeneralUI() {}
+
+void GeneralUI::resizeEvent(QResizeEvent *event)
+{
+  int iconSize = width()/5;
+  prevButton->setIconSize(QSize(iconSize, iconSize));
+  stopButton->setIconSize(QSize(iconSize, iconSize));
+  playButton->setIconSize(QSize(iconSize, iconSize));
+  nextButton->setIconSize(QSize(iconSize, iconSize));
+}
