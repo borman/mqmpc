@@ -21,6 +21,14 @@ void QSlideLabel::updateText(const QString &newText)
 void QSlideLabel::paintEvent(QPaintEvent * event)
 {
   QPainter p(this);
+
+  QLinearGradient fontGrad(0, 0, width(), 0);
+  fontGrad.setColorAt(0.0, QColor(255, 255, 255, 255));
+  fontGrad.setColorAt(0.8, QColor(255, 255, 255, 255));
+  fontGrad.setColorAt(1.0, QColor(255, 255, 255, 0));
+  QPen pen(QBrush(fontGrad), 1);
+  p.setPen(pen);
+
   if (time->state()==QTimeLine::Running)
   {
     int h1 = height()*time->currentValue();

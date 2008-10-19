@@ -67,7 +67,7 @@ MainWidget::MainWidget(QWidget *parent, Qt::WindowFlags)
   setConnected(false);
   setHostPort(savedHost, savedPort);
   retries = NRETRIES;
-  general_ui->nowPlaying->setText(tr("Not connected"));
+  general_ui->nowPlaying->updateContents(tr("Not connected"));
   QTimer::singleShot(0, this, SLOT(doConnect()));
 };
 
@@ -91,7 +91,7 @@ void MainWidget::doDisconnect()
     conn = NULL;
     printf("Disconnect()\n");
     setConnected(false);
-    general_ui->nowPlaying->setText(tr("Not connected"));
+    general_ui->nowPlaying->updateContents(tr("Not connected"));
     //qApp->processEvents();
   }
 }
@@ -102,13 +102,13 @@ void MainWidget::doConnect()
     return;
 
   printf("Trying to connect...\n");
-  general_ui->nowPlaying->setText(QString(tr("Connecting to \"%1\"...")).arg(host));
+  general_ui->nowPlaying->updateContents(QString(tr("Connecting to \"%1\"...")).arg(host));
   qApp->processEvents();
 
   conn = mpd_newConnection(host.toUtf8().constData(), port, 1);
   if (checkConnection())
   {
-    general_ui->nowPlaying->setText(tr("Connected"));
+    general_ui->nowPlaying->updateContents(tr("Connected"));
     qApp->processEvents();
     printf("Connect()\n");
     setConnected(true);
@@ -252,7 +252,7 @@ void MainWidget::updateStatus()
     memcpy(&mpd_status, tmp, sizeof(mpd_Status));
   mpd_freeStatus(tmp);
 
-  if (mpd_status.song!=nowPlayingNum)
+  if (mpd_status.song!=nowPlayingNum || mpd_status.playlist!=mpd_playlist)
   {
     if (nowPlayingNum>=0)
     {
@@ -266,42 +266,32 @@ void MainWidget::updateStatus()
       item->setIcon(loadMultiIcon("media-playlist-current"));
       general_ui->playlist->scrollToItem(item);
     }
-    nowPlayingNum = mpd_status.song;
-  }
 
-  MPD(mpd_sendCurrentSongCommand(conn));
-  MPD(mpd_nextListOkCommand(conn));
-  MPD(mpd_InfoEntity *tmp2 = mpd_getNextInfoEntity(conn));
+    // Update current song
+    MPD(mpd_sendCurrentSongCommand(conn));
+    MPD(mpd_nextListOkCommand(conn));
+    MPD(mpd_InfoEntity *tmp2 = mpd_getNextInfoEntity(conn));
 
-  if (tmp2 && tmp2->type==MPD_INFO_ENTITY_TYPE_SONG)
-  {
-    mpd_Song *mpd_song = tmp2->info.song;
-    QString np_str;
-    if (mpd_song->title)
+    if (tmp2 && tmp2->type==MPD_INFO_ENTITY_TYPE_SONG)
     {
-      np_str = "<big>" + QString::fromUtf8(mpd_song->title).simplified() + "</big>";
-      if (mpd_song->artist || mpd_song->album)
-        np_str += "<br />";
-      if (mpd_song->artist && mpd_song->album)
-        np_str += QString("%1 - \"%2\"").
-                  arg(QString::fromUtf8(mpd_song->artist).simplified()).
-                  arg(QString::fromUtf8(mpd_song->album).simplified());
+      mpd_Song *mpd_song = tmp2->info.song;
+      QString np_title;
+      QString np_artist;
+      QString np_album;
+      if (mpd_song->title)
+        np_title = QString::fromUtf8(mpd_song->title).simplified();
       else
-      {
-        if (mpd_song->artist)
-          np_str += QString("%1").
-                    arg(QString::fromUtf8(mpd_song->artist).simplified());
-        else
-          np_str += QString("\"%2\"").
-                    arg(QString::fromUtf8(mpd_song->album).simplified());
-      }
+        np_title = QString::fromUtf8(mpd_song->file).simplified();
+      if (mpd_song->artist)
+        np_artist = QString::fromUtf8(mpd_song->artist).simplified();
+      if (mpd_song->album)
+        np_album = QString::fromUtf8(mpd_song->album).simplified();
+
+      general_ui->nowPlaying->updateContents(np_title, np_artist, np_album);
+      mpd_freeInfoEntity(tmp2);
     }
-    else
-    {
-      np_str = mpd_song->file;
-    }
-    general_ui->nowPlaying->setText(np_str);
-    mpd_freeInfoEntity(tmp2);
+
+    nowPlayingNum = mpd_status.song;
   }
 
   if (mpd_status.state==MPD_STATUS_STATE_PLAY || mpd_status.state == MPD_STATUS_STATE_PAUSE)

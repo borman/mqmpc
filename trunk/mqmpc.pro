@@ -3,8 +3,8 @@ TARGET=mqmpc
 CONFIG+=qtopia_main no_quicklaunch
 
 # Input
-HEADERS += collection.h libmpdclient.h mainwidget.h ui_general.h qslidelabel.h
-SOURCES += collection.cpp libmpdclient.c main.cpp mainwidget.cpp ui_general.cpp qslidelabel.cpp
+HEADERS += collection.h libmpdclient.h mainwidget.h ui_general.h qslidelabel.h qmedialabel.h
+SOURCES += collection.cpp libmpdclient.c main.cpp mainwidget.cpp ui_general.cpp qslidelabel.cpp qmedialabel.cpp
 TRANSLATIONS += mqmpc-ru_RU.ts
 
 # Set this to trusted for full privileges

@@ -8,6 +8,8 @@
 #include <QPushButton>
 #include <QProgressBar>
 
+#include "qmedialabel.h"
+
 #define UI_PROGRESSBAR_SIZE 512
 
 QIcon loadMultiIcon(const QString &name);
@@ -28,7 +30,10 @@ public:
 
   QProgressBar *progressBar;
 
-  QLabel *nowPlaying;
+  QMediaLabel *nowPlaying;
+
+ protected:
+    virtual void resizeEvent(QResizeEvent *event);
 };
 
 #endif
