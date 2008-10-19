@@ -59,7 +59,8 @@ void QMediaLabel::paintEvent(QPaintEvent *event)
   fontGrad.setColorAt(0.0, QColor(255, 255, 255, 255));
   fontGrad.setColorAt(0.8, QColor(255, 255, 255, 255));
   fontGrad.setColorAt(1.0, QColor(255, 255, 255, 0));
-  QPen pen(QBrush(fontGrad), 1);
+  QBrush gradBrush(fontGrad);
+  QPen pen(gradBrush, 1.0);
   p.setPen(pen);
 
   QRect flRect(0, 1, width(), flFontMetrics->height());
