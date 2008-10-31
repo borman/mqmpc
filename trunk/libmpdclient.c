@@ -1236,10 +1236,6 @@ char * mpd_getNextAlbum(mpd_Connection * connection) {
 	return mpd_getNextReturnElementNamed(connection,"Album");
 }
 
-char * mpd_getNextTitle(mpd_Connection * connection) {
-	return mpd_getNextReturnElementNamed(connection,"Title");
-}
-
 void mpd_sendPlaylistInfoCommand(mpd_Connection * connection, int songPos) {
 	int len = strlen("playlistinfo")+2+INTLEN+3;
 	char *string = malloc(len);
@@ -1330,7 +1326,6 @@ void mpd_sendListCommand(mpd_Connection * connection, int table,
 	char *string;
 	if(table == MPD_TABLE_ARTIST) strcpy(st,"artist");
 	else if(table == MPD_TABLE_ALBUM) strcpy(st,"album");
-        else if(table == MPD_TABLE_TITLE) strcpy(st,"title album");
 	else {
 		connection->error = 1;
 		strcpy(connection->errorStr,"unknown table for list");
@@ -1348,7 +1343,6 @@ void mpd_sendListCommand(mpd_Connection * connection, int table,
 		string = malloc(len);
 		snprintf(string, len, "list %s\n", st);
 	}
-        printf("%s\n",string);
 	mpd_sendInfoCommand(connection,string);
 	free(string);
 }
@@ -1358,8 +1352,6 @@ void mpd_sendAddCommand(mpd_Connection * connection, const char * file) {
 	int len = strlen("add")+2+strlen(sFile)+3;
 	char *string = malloc(len);
 	snprintf(string, len, "add \"%s\"\n", sFile);
-
-        printf("%s\n",string);
 	mpd_executeCommand(connection,string);
 	free(string);
 	free(sFile);
@@ -1382,7 +1374,7 @@ int mpd_sendAddIdCommand(mpd_Connection *connection, const char *file)
 		retval = atoi(string);
 		free(string);
 	}
-	
+
 	return retval;
 }
 
@@ -1462,16 +1454,6 @@ void mpd_sendPlayCommand(mpd_Connection * connection, int songPos) {
 	free(string);
 }
 
-void mpd_sendToggleCommand(mpd_Connection * connection) {
-        mpd_executeCommand(connection,"pause\n");
-
-}
-void mpd_sendPlayCurrentCommand(mpd_Connection * connection) {
-        mpd_executeCommand(connection,"play\n");
-
-}
-
-
 void mpd_sendPlayIdCommand(mpd_Connection * connection, int id) {
 	int len = strlen("playid")+2+INTLEN+3;
 	char *string = malloc(len);
@@ -1545,21 +1527,14 @@ void mpd_sendSeekIdCommand(mpd_Connection * connection, int id, int time) {
 }
 
 void mpd_sendUpdateCommand(mpd_Connection * connection, char * path) {
-
 	char * sPath = mpd_sanitizeArg(path);
 	int len = strlen("update")+2+strlen(sPath)+3;
 	char *string = malloc(len);
-
-	sprintf(string, len, "update \"%s\"\n", sPath);
+	snprintf(string, len, "update \"%s\"\n", sPath);
 	mpd_sendInfoCommand(connection,string);
 	free(string);
 	free(sPath);
 }
-
-void mpd_sendUpdateAllCommand(mpd_Connection * connection) {
-	mpd_executeCommand(connection,"update\n");
-}
-
 
 int mpd_getUpdateId(mpd_Connection * connection) {
 	char * jobid;
@@ -1602,17 +1577,6 @@ void mpd_sendSetvolCommand(mpd_Connection * connection, int volumeChange) {
 	free(string);
 }
 
-void mpd_sendCVolumeCommand(mpd_Connection * connection, const char * volumeChange) {
-	char * vol = mpd_sanitizeArg(volumeChange);
-	int len = strlen("volume")+2+strlen(vol)+1;
-	char *string = malloc(len);
-	snprintf(string, len, "volume %s\n", vol);
-	mpd_executeCommand(connection,string);
-	free(string);
-	free(vol);
-}
-
- 
 void mpd_sendVolumeCommand(mpd_Connection * connection, int volumeChange) {
 	int len = strlen("volume")+2+INTLEN+3;
 	char *string = malloc(len);
@@ -1852,14 +1816,12 @@ void mpd_addConstraintSearch(mpd_Connection *connection, int type, const char *n
 	int len;
 	char *string;
 
-
 	if (!connection->request) {
 		strcpy(connection->errorStr, "no search in progress");
 		connection->error = 1;
 		return;
 	}
 
-        printf("%i, %i\n", type, MPD_TAG_NUM_OF_ITEM_TYPES);
 	if (type < 0 || type >= MPD_TAG_NUM_OF_ITEM_TYPES) {
 		strcpy(connection->errorStr, "invalid type specified");
 		connection->error = 1;
@@ -1880,8 +1842,6 @@ void mpd_addConstraintSearch(mpd_Connection *connection, int type, const char *n
 	connection->request = realloc(connection->request, len);
 	snprintf(connection->request, len, "%s %c%s \"%s\"",
 	         string, tolower(strtype[0]), strtype+1, arg);
-
-        printf ("%s\n",string);
 
 	free(string);
 	free(arg);

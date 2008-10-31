@@ -446,7 +446,7 @@ void mpd_sendFindCommand(mpd_Connection * connection, int table,
 char * mpd_getNextArtist(mpd_Connection * connection);
 
 char * mpd_getNextAlbum(mpd_Connection * connection);
-char * mpd_getNextTitle(mpd_Connection * connection);
+
 char * mpd_getNextTag(mpd_Connection *connection, int type);
 
 /* list artist or albums by artist, arg1 should be set to the artist if
@@ -483,9 +483,6 @@ void mpd_sendClearCommand(mpd_Connection * connection);
 
 void mpd_sendPlayCommand(mpd_Connection * connection, int songNum);
 
-void mpd_sendPlayCurrentCommand(mpd_Connection * connection);
-void mpd_sendToggleCommand(mpd_Connection * connection);
-
 void mpd_sendPlayIdCommand(mpd_Connection * connection, int songNum);
 
 void mpd_sendStopCommand(mpd_Connection * connection);
@@ -513,7 +510,6 @@ void mpd_sendRepeatCommand(mpd_Connection * connection, int repeatMode);
 void mpd_sendRandomCommand(mpd_Connection * connection, int randomMode);
 
 void mpd_sendSetvolCommand(mpd_Connection * connection, int volumeChange);
-void mpd_sendCVolumeCommand(mpd_Connection * connection, const char * volumeChange);
 
 /* WARNING: don't use volume command, its depreacted */
 void mpd_sendVolumeCommand(mpd_Connection * connection, int volumeChange);
@@ -521,7 +517,6 @@ void mpd_sendVolumeCommand(mpd_Connection * connection, int volumeChange);
 void mpd_sendCrossfadeCommand(mpd_Connection * connection, int seconds);
 
 void mpd_sendUpdateCommand(mpd_Connection * connection, char * path);
-void mpd_sendUpdateAllCommand(mpd_Connection * connection);
 
 /* returns the update job id, call this after a update command*/
 int mpd_getUpdateId(mpd_Connection * connection);
@@ -533,7 +528,7 @@ void mpd_sendPasswordCommand(mpd_Connection * connection, const char * pass);
  */
 void mpd_finishCommand(mpd_Connection * connection);
 
-/* comvoid mpd_sendSetvolCommand(mpd_Connection * connection, const char * volumeChange)and list stuff, use this to do things like add files very quickly */
+/* command list stuff, use this to do things like add files very quickly */
 void mpd_sendCommandListBegin(mpd_Connection * connection);
 
 void mpd_sendCommandListOkBegin(mpd_Connection * connection);

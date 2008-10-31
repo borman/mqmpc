@@ -198,7 +198,7 @@ void MainWidget::playPause()
     MPD(mpd_sendPauseCommand(conn, 1));
     break;
     case MPD_STATUS_STATE_STOP:
-    MPD(mpd_sendPlayCurrentCommand(conn));
+    MPD(mpd_sendPlayCommand(conn, nowPlayingNum));
     break;
   }
   if (mpd_status.state!=MPD_STATUS_STATE_UNKNOWN)
@@ -225,7 +225,7 @@ void MainWidget::volumeDown()
 {
   if (!isConnected)
     return;
-  MPD(mpd_sendCVolumeCommand(conn, "-5"));
+  MPD(mpd_sendSetvolCommand(conn, -5));
   MPD(mpd_finishCommand(conn));
 }
 
@@ -233,7 +233,7 @@ void MainWidget::volumeUp()
 {
   if (!isConnected)
     return;
-  MPD(mpd_sendCVolumeCommand(conn, "+5"));
+  MPD(mpd_sendSetvolCommand(conn, +5));
   MPD(mpd_finishCommand(conn));
 }
 
@@ -249,8 +249,10 @@ void MainWidget::updateStatus()
     return;
   MPD(mpd_Status *tmp = mpd_getStatus(conn));
   if (tmp)
+  {
     memcpy(&mpd_status, tmp, sizeof(mpd_Status));
-  mpd_freeStatus(tmp);
+    mpd_freeStatus(tmp);
+  }
 
   if (mpd_status.song!=nowPlayingNum || mpd_status.playlist!=mpd_playlist)
   {
